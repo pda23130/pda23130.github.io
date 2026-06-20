@@ -70,43 +70,39 @@
         oscillator.stop(audioCtx.currentTime + 0.7);
     }
 
-        // Component για τις μουσικές σφαίρες
         AFRAME.registerComponent('music-note', {
             schema: {
                 frequency: {type: 'number'},
                 note: {type: 'string'}
             },
-
+        
             init: function () {
                 let el = this.el;
-
+        
                 el.addEventListener('click', () => {
-
-                    // Παίζει η νότα
                     playNote(this.data.frequency);
-
-                    // Η σφαίρα εξαφανίζεται
-                    el.setAttribute('visible', 'false');
-
-                    // Αυξάνεται ο μετρητής
+        
                     notesFound++;
-
-                    // Ενημερώνεται το κείμενο μέσα στη σκηνή
-                    document.querySelector('#message')
-                        .setAttribute('value', 'Βρήκες τη νότα ' + this.data.note + 
-                        ' (' + notesFound + '/' + totalNotes + ')');
-
-                    // Αν βρεθούν όλες οι νότες, ανοίγει η πόρτα
+        
+                    document.querySelector('#message').setAttribute(
+                        'value',
+                        'Βρήκες τη νότα ' + this.data.note + ' (' + notesFound + '/' + totalNotes + ')'
+                    );
+        
+                    el.parentNode.removeChild(el);
+        
                     if (notesFound === totalNotes) {
-                        document.querySelector('#door')
-                            .setAttribute('color', 'green');
-
-                        document.querySelector('#message')
-                            .setAttribute('value', 'Μπράβο! Η πόρτα άνοιξε. Η Συμφωνία των Χρωμάτων ολοκληρώθηκε!');
+                        document.querySelector('#door').setAttribute('color', 'green');
+        
+                        document.querySelector('#message').setAttribute(
+                            'value',
+                            'Μπράβο! Η πόρτα άνοιξε!'
+                        );
                     }
                 });
             }
         });
+          
     </script>
 </head>
 
@@ -130,7 +126,7 @@
 
     <div align="center">
 
-        <a-scene ondblclick="this.requestFullscreen();" embedded>
+        <a-scene ondblclick="this.requestFullscreen();" embedded cursor="rayOrigin: mouse">
 
             <!-- Ουρανός / φόντο -->
             <a-sky color="#111122"></a-sky>
@@ -169,19 +165,19 @@
             </a-text>
 
             <!-- 7 χρωματικές νότες -->
-            <a-sphere position="-2 1 -4" radius="0.4" color="red"
+            <a-sphere class="clickable" position="-2 1 -4" radius="0.4" color="red"
                 music-note="frequency: 262; note: Ντο"></a-sphere>
 
-            <a-sphere position="0 1 -5" radius="0.4" color="orange"
+            <a-sphere class="clickable" position="0 1 -5" radius="0.4" color="orange"
                 music-note="frequency: 294; note: Ρε"></a-sphere>
 
-            <a-sphere position="2 1 -4" radius="0.4" color="yellow"
+            <a-sphere class="clickable" position="2 1 -4" radius="0.4" color="yellow"
                 music-note="frequency: 330; note: Μι"></a-sphere>
 
-            <a-sphere position="-2 1 -7" radius="0.5" color="green"
+            <a-sphere class="clickable" position="-2 1 -7" radius="0.5" color="green"
                 music-note="frequency: 349; note: Φα"></a-sphere>
 
-            <a-sphere position="0 1 -8" radius="0.5" color="cyan"
+            <a-sphere class="clickable" position="0 1 -8" radius="0.5" color="cyan"
                 music-note="frequency: 392; note: Σολ"></a-sphere>
 
             <a-sphere position="2 1 -7" radius="0.5" color="blue"
@@ -201,7 +197,7 @@
                 </a-camera>
             </a-entity>
 
-        </a-scene>
+        </>
 
     </div>
 
