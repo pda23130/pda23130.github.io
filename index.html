@@ -11,98 +11,64 @@
     </style>
 
     <script>
-        // Πόσες νότες έχει βρει ο παίκτης
+        // Μετρητής για τις νότες που βρήκε ο παίκτης
         let notesFound = 0;
 
-        // Συνολικός αριθμός νοτών
+        // Σύνολο νοτών
         const totalNotes = 7;
 
-        // Δημιουργούμε ένα audio context ΜΙΑ φορά
-        let audioCtx;
-    
-        // Συνάρτηση που παίζει μία απλή νότα με Web Audio
-        //function playNote(frequency) {
-            //const audioCtx = new AudioContext();
-            //const oscillator = audioCtx.createOscillator();
-            //const gain = audioCtx.createGain();
+        // Δημιουργούμε ένα audio context
+        let audioCtx = null;
 
-            //oscillator.frequency.value = frequency;
-            //oscillator.type = "sine";
-
-            //oscillator.connect(gain);
-            //gain.connect(audioCtx.destination);
-
-            //gain.gain.value = 0.2;
-
-            //oscillator.start();
-          //  oscillator.stop(audioCtx.currentTime + 0.5);
-        //}
-        
+        // Συνάρτηση που παίζει μία νότα
         function playNote(frequency) {
-
-        // Αν δεν υπάρχει audio context, το φτιάχνουμε
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-
-        // Αν ο browser το έχει σταματήσει, το ξυπνάμε
-        if (audioCtx.state === "suspended") {
-            audioCtx.resume();
-        }
-
-        // Δημιουργούμε τον ήχο
-        const oscillator = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        oscillator.frequency.value = frequency;
-        oscillator.type = "sine";
-
-        oscillator.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        // Ένταση
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-
-        // Σβήσιμο ήχου για να μη χτυπάει απότομα
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.7);
-
-        oscillator.start(audioCtx.currentTime);
-        oscillator.stop(audioCtx.currentTime + 0.7);
-    }
-
-        AFRAME.registerComponent('music-note', {
-            schema: {
-                frequency: {type: 'number'},
-                note: {type: 'string'}
-            },
-        
-            init: function () {
-                let el = this.el;
-        
-                el.addEventListener('click', () => {
-                    playNote(this.data.frequency);
-        
-                    notesFound++;
-        
-                    document.querySelector('#message').setAttribute(
-                        'value',
-                        'Βρήκες τη νότα ' + this.data.note + ' (' + notesFound + '/' + totalNotes + ')'
-                    );
-        
-                    el.parentNode.removeChild(el);
-        
-                    if (notesFound === totalNotes) {
-                        document.querySelector('#door').setAttribute('color', 'green');
-        
-                        document.querySelector('#message').setAttribute(
-                            'value',
-                            'Μπράβο! Η πόρτα άνοιξε!'
-                        );
-                    }
-                });
+            if (audioCtx === null) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
-        });
-          
+
+            const oscillator = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            oscillator.frequency.value = frequency;
+            oscillator.type = "sine";
+
+            oscillator.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            gain.gain.value = 0.3;
+
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.6);
+        }
+
+        // Συνάρτηση που καλείται όταν πατάμε μία μπάλα
+        function collectNote(id, frequency, noteName) {
+
+            // Παίζει η νότα
+            playNote(frequency);
+
+            // Αυξάνεται ο μετρητής
+            notesFound = notesFound + 1;
+
+            // Αλλάζει το μήνυμα
+            document.getElementById("message").setAttribute(
+                "value",
+                "Βρήκες τη νότα " + noteName + " (" + notesFound + "/" + totalNotes + ")"
+            );
+
+            // Κρύβεται η μπάλα
+            document.getElementById(id).setAttribute("visible", "false");
+
+            // Αν βρέθηκαν όλες οι νότες
+            if (notesFound === totalNotes) {
+                document.getElementById("door").setAttribute("color", "green");
+
+                document.getElementById("message").setAttribute(
+                    "value",
+                    "Μπράβο! Η πόρτα άνοιξε!"
+                );
+            }
+        }
     </script>
 </head>
 
@@ -121,83 +87,64 @@
         Όταν ο χρήστης ενεργοποιήσει και τις επτά νότες, η πόρτα του μουσείου ανοίγει
         και η «Συμφωνία των Χρωμάτων» ολοκληρώνεται.
     </p>
-
+    
     <hr />
 
     <div align="center">
 
         <a-scene ondblclick="this.requestFullscreen();" embedded cursor="rayOrigin: mouse">
 
-            <!-- Ουρανός / φόντο -->
             <a-sky color="#111122"></a-sky>
 
-            <!-- Πάτωμα -->
-            <a-plane 
-                position="0 0 0" 
-                rotation="-90 0 0" 
-                width="20" 
-                height="20" 
-                color="#333333">
+            <a-plane position="0 0 0" rotation="-90 0 0"
+                     width="14" height="14" color="#333333">
             </a-plane>
 
-            <!-- Τοίχοι μουσείου -->
-            <a-box position="0 2 -10" width="20" height="4" depth="0.2" color="#555555"></a-box>
-            <a-box position="-10 2 0" width="0.2" height="4" depth="20" color="#444444"></a-box>
-            <a-box position="10 2 0" width="0.2" height="4" depth="20" color="#444444"></a-box>
+            <a-box position="0 2 -7" width="14" height="4" depth="0.2" color="#555555"></a-box>
+            <a-box position="-7 2 0" width="0.2" height="4" depth="14" color="#444444"></a-box>
+            <a-box position="7 2 0" width="0.2" height="4" depth="14" color="#444444"></a-box>
 
-            <!-- Πόρτα εξόδου -->
-            <a-box 
-                id="door"
-                position="0 1 -9.8" 
-                width="3" 
-                height="2.8" 
-                depth="0.3" 
-                color="darkred">
+            <a-box id="door" position="0 1 -6.8"
+                   width="2.5" height="2.5" depth="0.3" color="darkred">
             </a-box>
 
-            <!-- Κείμενο μέσα στη σκηνή -->
-            <a-text 
-                id="message"
-                value="Βρες τις 7 χαμένες νότες"
-                position="-3 3 -6"
-                color="white"
-                width="8">
+            <a-text id="message"
+                    value="Βρες τις 7 χαμένες νότες"
+                    position="-3 3 -5"
+                    color="white"
+                    width="7">
             </a-text>
 
-            <!-- 7 χρωματικές νότες -->
-            <a-sphere class="clickable" position="-2 1 -4" radius="0.4" color="red"
-                music-note="frequency: 262; note: Ντο"></a-sphere>
+            <!-- Οι 7 μπάλες / νότες -->
+            <a-sphere id="note1" position="-3 1 -3" radius="0.4" color="red"
+                onclick="collectNote('note1', 262, 'Ντο')"></a-sphere>
 
-            <a-sphere class="clickable" position="0 1 -5" radius="0.4" color="orange"
-                music-note="frequency: 294; note: Ρε"></a-sphere>
+            <a-sphere id="note2" position="-2 1 -5" radius="0.4" color="orange"
+                onclick="collectNote('note2', 294, 'Ρε')"></a-sphere>
 
-            <a-sphere class="clickable" position="2 1 -4" radius="0.4" color="yellow"
-                music-note="frequency: 330; note: Μι"></a-sphere>
+            <a-sphere id="note3" position="-1 1 -3" radius="0.4" color="yellow"
+                onclick="collectNote('note3', 330, 'Μι')"></a-sphere>
 
-            <a-sphere class="clickable" position="-2 1 -7" radius="0.5" color="green"
-                music-note="frequency: 349; note: Φα"></a-sphere>
+            <a-sphere id="note4" position="0 1 -5" radius="0.4" color="green"
+                onclick="collectNote('note4', 349, 'Φα')"></a-sphere>
 
-            <a-sphere class="clickable" position="0 1 -8" radius="0.5" color="cyan"
-                music-note="frequency: 392; note: Σολ"></a-sphere>
+            <a-sphere id="note5" position="1 1 -3" radius="0.4" color="cyan"
+                onclick="collectNote('note5', 392, 'Σολ')"></a-sphere>
 
-            <a-sphere position="2 1 -7" radius="0.5" color="blue"
-                music-note="frequency: 440; note: Λα"></a-sphere>
+            <a-sphere id="note6" position="2 1 -5" radius="0.4" color="blue"
+                onclick="collectNote('note6', 440, 'Λα')"></a-sphere>
 
-            <a-sphere position="0 2 -6" radius="0.5" color="purple"
-                music-note="frequency: 494; note: Σι"></a-sphere>
+            <a-sphere id="note7" position="3 1 -3" radius="0.4" color="purple"
+                onclick="collectNote('note7', 494, 'Σι')"></a-sphere>
 
-            <!-- Φωτισμός -->
-            <a-light type="ambient" intensity="0.5"></a-light>
+            <a-light type="ambient" intensity="0.6"></a-light>
             <a-light type="point" position="0 5 0" intensity="1"></a-light>
 
-            <!-- Κάμερα και cursor για αλληλεπίδραση -->
-            <a-entity position="0 1.6 5">
-                <a-camera>
-                    <a-cursor color="white"></a-cursor>
-                </a-camera>
-            </a-entity>
+            <a-camera position="0 1.6 4">
+                <a-cursor color="white"></a-cursor>
+            </a-camera>
 
-        </>
+        </a-scene>
 
     </div>
 
