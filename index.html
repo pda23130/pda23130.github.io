@@ -147,7 +147,7 @@
 
                 document.getElementById("message").setAttribute(
                     "value",
-                    "Wrong note! Try again."
+                    "Wrong note. Find: " + notesOrder[currentNote]"
                 );
 
                 return;
@@ -269,7 +269,7 @@
 
             <!-- Μήνυμα μέσα στη σκηνή -->
             <a-text id="message"
-                    value="Find Next Note: Do"
+                    value="Find Note: Do"
                     position="0 3 -4"
                     align="center"
                     color="yellow"
@@ -280,7 +280,7 @@
             <!-- Do -->
             <a-sphere id="note1"
                       position="-5 1 -2"
-                      radius="0.4"
+                      radius="0.5"
                       color="red"
                       onclick="collectNote('note1',262,'Do')">
             </a-sphere>
@@ -288,7 +288,7 @@
             <!-- Re -->
             <a-sphere id="note2"
                       position="4 1.8 -5"
-                      radius="0.4"
+                      radius="0.5"
                       color="orange"
                       onclick="collectNote('note2',294,'Re')">
             </a-sphere>
@@ -296,7 +296,7 @@
             <!-- Mi -->
             <a-sphere id="note3"
                       position="-2 1.3 -6"
-                      radius="0.4"
+                      radius="0.5"
                       color="yellow"
                       onclick="collectNote('note3',330,'Mi')">
             </a-sphere>
@@ -304,7 +304,7 @@
             <!-- Fa -->
             <a-sphere id="note4"
                       position="5 2 -1"
-                      radius="0.4"
+                      radius="0.5"
                       color="green"
                       onclick="collectNote('note4',349,'Fa')">
             </a-sphere>
@@ -312,7 +312,7 @@
             <!-- Sol -->
             <a-sphere id="note5"
                       position="-4 0.8 -5"
-                      radius="0.4"
+                      radius="0.5"
                       color="cyan"
                       onclick="collectNote('note5',392,'Sol')">
             </a-sphere>
@@ -320,7 +320,7 @@
             <!-- La -->
             <a-sphere id="note6"
                       position="1 1.5 -2"
-                      radius="0.4"
+                      radius="0.5"
                       color="blue"
                       onclick="collectNote('note6',440,'La')">
             </a-sphere>
@@ -328,7 +328,7 @@
             <!-- Si -->
             <a-sphere id="note7"
                       position="3 2.2 -7"
-                      radius="0.4"
+                      radius="0.5"
                       color="purple"
                       onclick="collectNote('note7',494,'Si')">
             </a-sphere>
