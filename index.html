@@ -17,6 +17,18 @@
         // Σύνολο νοτών
         const totalNotes = 7;
 
+        const notesOrder = [
+                            "Ντο",
+                            "Ρε",
+                            "Μι",
+                            "Φα",
+                            "Σολ",
+                            "Λα",
+                            "Σι"
+                        ];
+
+        let currentNote = 0;
+
         // Δημιουργούμε ένα audio context
         let audioCtx = null;
 
@@ -54,40 +66,56 @@
 
         
         // Συνάρτηση που καλείται όταν πατάμε μία μπάλα
-        function collectNote(id, frequency, noteName) {
+       function collectNote(id, frequency, noteName) {
 
-             // Αν η νότα έχει ήδη αφαιρεθεί, σταματάει η συνάρτηση
-            if (!document.getElementById(id)) {
-                return;
-            }
-            
-            // Παίζει η νότα
-            playNote(frequency);
-
-            // Αυξάνεται ο μετρητής
-            notesFound = notesFound + 1;
-
-            // Αλλάζει το μήνυμα
+        if (!document.getElementById(id)) {
+            return;
+        }
+    
+        // Έλεγχος σωστής νότας
+        if (noteName !== notesOrder[currentNote]) {
+    
             document.getElementById("message").setAttribute(
                 "value",
-                "Βρήκες τη νότα " + noteName + " (" + notesFound + "/" + totalNotes + ")"
+                "Wrong note! Try again."
             );
-
-            // Αφαιρείται τελείως η μπάλα από τη σκηνή
-            document.getElementById(id).remove();
-
-            // Αν βρέθηκαν όλες οι νότες
-            if (notesFound === totalNotes) {
-                document.getElementById("door").setAttribute("color", "green");
-
-                document.getElementById("message").setAttribute(
-                    "value",
-                    "Bravo! I porta anoixe!"
-                );
-                // Παίζει η τελική μελωδία
-                playFinalMelody();
-            }
+    
+            return;
         }
+    
+        // Σωστή νότα
+        playNote(frequency);
+    
+        notesFound++;
+        currentNote++;
+    
+        document.getElementById(id).remove();
+    
+        // Αν υπάρχουν κι άλλες νότες
+        if (currentNote < notesOrder.length) {
+    
+            document.getElementById("message").setAttribute(
+                "value",
+                "Find note: " + notesOrder[currentNote]
+            );
+        }
+    
+        // Τέλος παιχνιδιού
+        if (notesFound === totalNotes) {
+    
+            document.getElementById("door").setAttribute(
+                "color",
+                "green"
+            );
+    
+            document.getElementById("message").setAttribute(
+                "value",
+                "CONGRATULATIONS!"
+            );
+    
+            playFinalMelody();
+        }
+    }
     </script>
 </head>
 
@@ -126,7 +154,7 @@
             </a-box>
 
             <a-text id="message"
-                    value="Βρες τις 7 χαμένες νότες"
+                    value="Find note: Ντο"
                     position="-3 3 -5"
                     color="white"
                     width="7">
