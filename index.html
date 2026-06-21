@@ -1,64 +1,101 @@
 <html>
 
 <head>
+    <!-- Φορτώνουμε τη βιβλιοθήκη A-Frame -->
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
 
     <style>
         h1 { text-align: center; }
         h3 { text-align: center; }
-        a-scene { width: 80%; height: 500px; border: dotted silver 1px; }
-        body { font-family: Arial; }
+
+        a-scene {
+            width: 80%;
+            height: 500px;
+            border: dotted silver 1px;
+        }
+
+        body {
+            font-family: Arial;
+        }
     </style>
 
     <script>
-        // Μετρητής για τις νότες που βρήκε ο παίκτης
+        // ----------------------------------------------------
+        // ΒΑΣΙΚΕΣ ΜΕΤΑΒΛΗΤΕΣ ΤΟΥ ΠΑΙΧΝΙΔΙΟΥ
+        // ----------------------------------------------------
+
+        // Πόσες νότες έχει βρει σωστά ο χρήστης
         let notesFound = 0;
 
-        // Σύνολο νοτών
+        // Συνολικός αριθμός νοτών
         const totalNotes = 7;
 
+        // Η σωστή σειρά που πρέπει να ακολουθήσει ο χρήστης
         const notesOrder = [
-                            "Do",
-                            "Re",
-                            "Mi",
-                            "Fa",
-                            "Sol",
-                            "La",
-                            "Si"
-                        ];
+            "Do",
+            "Re",
+            "Mi",
+            "Fa",
+            "Sol",
+            "La",
+            "Si"
+        ];
 
+        // Δείχνει ποια νότα ζητάμε κάθε φορά
         let currentNote = 0;
 
-        // Δημιουργούμε ένα audio context
+        // Το audio context χρησιμοποιείται για να παραχθεί ήχος
         let audioCtx = null;
 
-        // Συνάρτηση που παίζει μία νότα
+
+        // ----------------------------------------------------
+        // ΣΥΝΑΡΤΗΣΗ ΠΟΥ ΠΑΙΖΕΙ ΜΙΑ ΝΟΤΑ
+        // ----------------------------------------------------
+
         function playNote(frequency) {
+
+            // Αν δεν υπάρχει audio context, το δημιουργούμε
             if (audioCtx === null) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
-          
+
+            // Δημιουργούμε έναν ταλαντωτή ήχου
             const oscillator = audioCtx.createOscillator();
+
+            // Δημιουργούμε έλεγχο έντασης
             const gain = audioCtx.createGain();
 
+            // Ορίζουμε τη συχνότητα της νότας
             oscillator.frequency.value = frequency;
+
+            // Ορίζουμε καθαρό ημιτονοειδή ήχο
             oscillator.type = "sine";
 
+            // Συνδέουμε τον ήχο με την ένταση και μετά με τα ηχεία
             oscillator.connect(gain);
             gain.connect(audioCtx.destination);
 
+            // Ένταση ήχου
             gain.gain.value = 0.3;
 
+            // Ξεκινά η νότα
             oscillator.start();
+
+            // Σταματά μετά από 0.6 δευτερόλεπτα
             oscillator.stop(audioCtx.currentTime + 0.6);
         }
 
-        // 
+
+        // ----------------------------------------------------
+        // ΤΕΛΙΚΗ ΜΕΛΩΔΙΑ ΜΕ ΟΠΤΙΚΟ ΦΩΤΙΣΜΟ
+        // ----------------------------------------------------
+
         function playFinalMelody() {
 
+            // Παίρνουμε τη σκηνή για να προσθέσουμε νέες μπάλες
             const scene = document.querySelector("a-scene");
-        
-            // Φτιάχνουμε τις 7 τελικές μπάλες
+
+            // Οι 7 τελικές μπάλες που θα εμφανιστούν σε σειρά
             const finalNotes = [
                 { id: "finalDo",  freq: 262, color: "red",    x: -3 },
                 { id: "finalRe",  freq: 294, color: "orange", x: -2 },
@@ -68,20 +105,22 @@
                 { id: "finalLa",  freq: 440, color: "blue",   x: 2 },
                 { id: "finalSi",  freq: 494, color: "purple", x: 3 }
             ];
-        
-            // Εμφανίζουμε τις μπάλες σε σειρά
+
+            // Δημιουργούμε τις 7 μπάλες σε ευθεία σειρά
             for (let i = 0; i < finalNotes.length; i++) {
+
                 const sphere = document.createElement("a-sphere");
-        
+
                 sphere.setAttribute("id", finalNotes[i].id);
                 sphere.setAttribute("position", finalNotes[i].x + " 2.3 -4");
                 sphere.setAttribute("radius", "0.45");
                 sphere.setAttribute("color", finalNotes[i].color);
-        
+
                 scene.appendChild(sphere);
             }
-        
-            // Η τελική μελωδία
+
+            // Τελική μελωδία
+            // Περιλαμβάνει όλες τις νότες τουλάχιστον μία φορά
             const melody = [
                 finalNotes[0], // Do
                 finalNotes[2], // Mi
@@ -97,91 +136,114 @@
                 finalNotes[1], // Re
                 finalNotes[0]  // Do
             ];
-        
+
             // Παίζει η μελωδία και φωτίζεται η αντίστοιχη μπάλα
             for (let i = 0; i < melody.length; i++) {
+
                 setTimeout(function () {
-        
+
+                    // Παίζει η νότα
                     playNote(melody[i].freq);
-        
+
+                    // Βρίσκουμε τη μπάλα που αντιστοιχεί στη νότα
                     const ball = document.getElementById(melody[i].id);
-        
+
                     if (ball) {
+
+                        // Η μπάλα μεγαλώνει
                         ball.setAttribute("scale", "1.8 1.8 1.8");
+
+                        // Η μπάλα γίνεται λευκή
                         ball.setAttribute("color", "white");
-        
+
+                        // Μετά από λίγο επιστρέφει στο αρχικό της χρώμα
                         setTimeout(function () {
                             ball.setAttribute("scale", "1 1 1");
                             ball.setAttribute("color", melody[i].color);
                         }, 400);
                     }
-        
+
                 }, i * 600);
             }
-        
+
             // Στο τέλος όλες οι μπάλες γίνονται χρυσές
             setTimeout(function () {
+
                 for (let i = 0; i < finalNotes.length; i++) {
+
                     const ball = document.getElementById(finalNotes[i].id);
-        
+
                     if (ball) {
                         ball.setAttribute("color", "gold");
                     }
                 }
+
             }, melody.length * 600 + 500);
         }
-        
-        // Συνάρτηση που καλείται όταν πατάμε μία μπάλα
-       function collectNote(id, frequency, noteName) {
 
-        if (!document.getElementById(id)) {
-            return;
+
+        // ----------------------------------------------------
+        // ΣΥΝΑΡΤΗΣΗ ΠΟΥ ΚΑΛΕΙΤΑΙ ΟΤΑΝ ΠΑΤΑΜΕ ΜΙΑ ΜΠΑΛΑ
+        // ----------------------------------------------------
+
+        function collectNote(id, frequency, noteName) {
+
+            // Αν η μπάλα έχει ήδη αφαιρεθεί, δεν γίνεται τίποτα
+            if (!document.getElementById(id)) {
+                return;
+            }
+
+            // Ελέγχουμε αν ο χρήστης πάτησε τη σωστή νότα
+            if (noteName !== notesOrder[currentNote]) {
+
+                document.getElementById("message").setAttribute(
+                    "value",
+                    "Wrong note! Try again."
+                );
+
+                return;
+            }
+
+            // Αν η νότα είναι σωστή, ακούγεται
+            playNote(frequency);
+
+            // Αυξάνουμε τον μετρητή
+            notesFound++;
+
+            // Προχωράμε στην επόμενη νότα
+            currentNote++;
+
+            // Αφαιρούμε τη μπάλα από τη σκηνή
+            document.getElementById(id).remove();
+
+            // Αν υπάρχουν ακόμα νότες, ζητάμε την επόμενη
+            if (currentNote < notesOrder.length) {
+
+                document.getElementById("message").setAttribute(
+                    "value",
+                    "Find Next Note: " + notesOrder[currentNote]
+                );
+            }
+
+            // Αν βρέθηκαν όλες οι νότες, ολοκληρώνεται το παιχνίδι
+            if (notesFound === totalNotes) {
+
+                // Η πόρτα γίνεται πράσινη
+                document.getElementById("door").setAttribute(
+                    "color",
+                    "green"
+                );
+
+                // Εμφανίζεται μήνυμα επιτυχίας
+                document.getElementById("message").setAttribute(
+                    "value",
+                    "CONGRATULATIONS!"
+                );
+
+                // Παίζει η τελική μελωδία
+                playFinalMelody();
+            }
         }
-    
-        // Έλεγχος σωστής νότας
-        if (noteName !== notesOrder[currentNote]) {
-    
-            document.getElementById("message").setAttribute(
-                "value",
-                "Wrong note! Try again."
-            );
-    
-            return;
-        }
-    
-        // Σωστή νότα
-        playNote(frequency);
-    
-        notesFound++;
-        currentNote++;
-    
-        document.getElementById(id).remove();
-    
-        // Αν υπάρχουν κι άλλες νότες
-        if (currentNote < notesOrder.length) {
-    
-            document.getElementById("message").setAttribute(
-                "value",
-                "Find Next Note: " + notesOrder[currentNote]
-            );
-        }
-    
-        // Τέλος παιχνιδιού
-        if (notesFound === totalNotes) {
-    
-            document.getElementById("door").setAttribute(
-                "color",
-                "green"
-            );
-    
-            document.getElementById("message").setAttribute(
-                "value",
-                "CONGRATULATIONS!"
-            );
-    
-            playFinalMelody();
-        }
-    }
     </script>
 </head>
 
@@ -194,9 +256,15 @@
 
     <p>
         <strong>Σενάριο (script):</strong>
-        Ο χρήστης βρίσκεται σε ένα εικονικό μουσείο όπου οι ήχοι έχουν χαθεί.
-        Πρέπει να βρει επτά χρωματικές σφαίρες. Κάθε σφαίρα παίζει μία νότα.
-        Όταν βρεθούν όλες οι νότες, η πόρτα ανοίγει.
+        Ο χρήστης βρίσκεται μέσα σε ένα εικονικό μουσείο όπου οι ήχοι έχουν χαθεί.
+        Στόχος του είναι να επαναφέρει τη μουσική ισορροπία, βρίσκοντας επτά
+        χρωματικές σφαίρες που αντιστοιχούν στις νότες Do, Re, Mi, Fa, Sol, La και Si.
+        Η εφαρμογή δεν επιτρέπει τυχαία επιλογή· ο χρήστης πρέπει να ακολουθήσει
+        τη σωστή μουσική σειρά. Κάθε σωστή επιλογή παίζει τη νότα και αφαιρεί τη
+        σφαίρα από τη σκηνή. Όταν ολοκληρωθούν και οι επτά νότες, η πόρτα γίνεται
+        πράσινη, εμφανίζεται μήνυμα επιτυχίας και ακούγεται μια τελική μελωδία.
+        Κατά τη μελωδία εμφανίζονται ξανά οι επτά νότες σε σειρά και φωτίζονται
+        ανάλογα με τον ήχο που ακούγεται.
     </p>
 
     <hr />
@@ -205,20 +273,32 @@
 
         <a-scene ondblclick="this.requestFullscreen();" embedded cursor="rayOrigin: mouse">
 
+            <!-- Φόντο του κόσμου -->
             <a-sky color="#111122"></a-sky>
 
-            <a-plane position="0 0 0" rotation="-90 0 0"
-                     width="14" height="14" color="#333333">
+            <!-- Πάτωμα -->
+            <a-plane position="0 0 0"
+                     rotation="-90 0 0"
+                     width="14"
+                     height="14"
+                     color="#333333">
             </a-plane>
 
+            <!-- Τοίχοι μουσείου -->
             <a-box position="0 2 -7" width="14" height="4" depth="0.2" color="#555555"></a-box>
             <a-box position="-7 2 0" width="0.2" height="4" depth="14" color="#444444"></a-box>
             <a-box position="7 2 0" width="0.2" height="4" depth="14" color="#444444"></a-box>
 
-            <a-box id="door" position="0 1 -6.8"
-                   width="2.5" height="2.5" depth="0.3" color="darkred">
+            <!-- Πόρτα εξόδου -->
+            <a-box id="door"
+                   position="0 1 -6.8"
+                   width="2.5"
+                   height="2.5"
+                   depth="0.3"
+                   color="darkred">
             </a-box>
 
+            <!-- Μήνυμα μέσα στη σκηνή -->
             <a-text id="message"
                     value="Find Next Note: Do"
                     position="0 3 -4"
@@ -227,7 +307,7 @@
                     width="15">
             </a-text>
 
-            <!-- Οι 7 μπάλες / νότες -->
+            <!-- Οι 7 αρχικές μπάλες / νότες -->
             <a-sphere id="note1" position="-3 1 -3" radius="0.4" color="red"
                 onclick="collectNote('note1', 262, 'Do')"></a-sphere>
 
@@ -249,9 +329,11 @@
             <a-sphere id="note7" position="3 1 -3" radius="0.4" color="purple"
                 onclick="collectNote('note7', 494, 'Si')"></a-sphere>
 
+            <!-- Φωτισμός -->
             <a-light type="ambient" intensity="0.6"></a-light>
             <a-light type="point" position="0 5 0" intensity="1"></a-light>
 
+            <!-- Κάμερα χρήστη -->
             <a-camera position="0 1.6 4">
                 <a-cursor color="white"></a-cursor>
             </a-camera>
@@ -264,15 +346,24 @@
 
     <p>
         <strong>Οδηγίες (guidelines):</strong>
-        Κάνε κλικ πάνω στις χρωματικές σφαίρες. Κάθε σφαίρα παίζει μία νότα και εξαφανίζεται.
-        Όταν βρεθούν και οι επτά νότες, η πόρτα γίνεται πράσινη.
+        Ο χρήστης κινείται στον χώρο με τα πλήκτρα <strong>W, A, S, D</strong>.
+        Με το ποντίκι αλλάζει την κατεύθυνση της κάμερας και με κλικ επιλέγει
+        τις χρωματικές σφαίρες. Το μήνυμα μέσα στη σκηνή δείχνει ποια νότα πρέπει
+        να βρεθεί κάθε φορά. Αν ο χρήστης πατήσει λάθος σφαίρα, εμφανίζεται το
+        μήνυμα “Wrong note! Try again.” Αν πατήσει τη σωστή, η νότα ακούγεται και
+        η σφαίρα αφαιρείται. Όταν βρεθούν σωστά όλες οι νότες, η πόρτα γίνεται
+        πράσινη και παίζει η τελική μελωδία.
     </p>
 
     <hr />
 
     <p>
         <strong>Credits:</strong>
-        Δημιουργία με A-Frame 1.7.0 και Web Audio API.
+        Η εφαρμογή δημιουργήθηκε με τη βιβλιοθήκη <strong>A-Frame 1.7.0</strong>.
+        Οι ήχοι παράγονται προγραμματιστικά με το <strong>Web Audio API</strong>.
+        Τα αντικείμενα της σκηνής δημιουργούνται με βασικά γεωμετρικά σχήματα
+        του A-Frame, όπως <strong>a-sphere</strong>, <strong>a-box</strong>,
+        <strong>a-plane</strong> και <strong>a-text</strong>.
     </p>
 
 </body>
