@@ -92,95 +92,35 @@
 
         function playFinalMelody() {
 
-            // Παίρνουμε τη σκηνή για να προσθέσουμε νέες μπάλες
-            const scene = document.querySelector("a-scene");
-
-            // Οι 7 τελικές μπάλες που θα εμφανιστούν σε σειρά
-            const finalNotes = [
-                { id: "finalDo",  freq: 262, color: "red",    x: -3 },
-                { id: "finalRe",  freq: 294, color: "orange", x: -2 },
-                { id: "finalMi",  freq: 330, color: "yellow", x: -1 },
-                { id: "finalFa",  freq: 349, color: "green",  x: 0 },
-                { id: "finalSol", freq: 392, color: "cyan",   x: 1 },
-                { id: "finalLa",  freq: 440, color: "blue",   x: 2 },
-                { id: "finalSi",  freq: 494, color: "purple", x: 3 }
-            ];
-
-            // Δημιουργούμε τις 7 μπάλες σε ευθεία σειρά
-            for (let i = 0; i < finalNotes.length; i++) {
-
-                const sphere = document.createElement("a-sphere");
-
-                sphere.setAttribute("id", finalNotes[i].id);
-                sphere.setAttribute("position", finalNotes[i].x + " 2.3 -4");
-                sphere.setAttribute("radius", "0.45");
-                sphere.setAttribute("color", finalNotes[i].color);
-
-                scene.appendChild(sphere);
-            }
-
+           
             // Τελική μελωδία
-            // Περιλαμβάνει όλες τις νότες τουλάχιστον μία φορά
             const melody = [
-                finalNotes[0], // Do
-                finalNotes[2], // Mi
-                finalNotes[4], // Sol
-                finalNotes[1], // Re
-                finalNotes[3], // Fa
-                finalNotes[5], // La
-                finalNotes[6], // Si
-                finalNotes[5], // La
-                finalNotes[4], // Sol
-                finalNotes[3], // Fa
-                finalNotes[2], // Mi
-                finalNotes[1], // Re
-                finalNotes[0]  // Do
+                262, // Do
+                330, // Mi
+                392, // Sol
+                294, // Re
+                349, // Fa
+                440, // La
+                494, // Si
+                440, // La
+                392, // Sol
+                349, // Fa
+                330, // Mi
+                294, // Re
+                262  // Do
             ];
-
-            // Παίζει η μελωδία και φωτίζεται η αντίστοιχη μπάλα
-            for (let i = 0; i < melody.length; i++) {
-
+        
+            // Παίζει η μελωδία
+           for (let i = 0; i < melody.length; i++) {
+               
                 setTimeout(function () {
-
-                    // Παίζει η νότα
-                    playNote(melody[i].freq);
-
-                    // Βρίσκουμε τη μπάλα που αντιστοιχεί στη νότα
-                    const ball = document.getElementById(melody[i].id);
-
-                    if (ball) {
-
-                        // Η μπάλα μεγαλώνει
-                        ball.setAttribute("scale", "1.8 1.8 1.8");
-
-                        // Η μπάλα γίνεται λευκή
-                        ball.setAttribute("color", "white");
-
-                        // Μετά από λίγο επιστρέφει στο αρχικό της χρώμα
-                        setTimeout(function () {
-                            ball.setAttribute("scale", "1 1 1");
-                            ball.setAttribute("color", melody[i].color);
-                        }, 400);
-                    }
-
+                    
+                    playNote(melody[i]);
+                    
                 }, i * 600);
             }
-
-            // Στο τέλος όλες οι μπάλες γίνονται χρυσές
-            setTimeout(function () {
-
-                for (let i = 0; i < finalNotes.length; i++) {
-
-                    const ball = document.getElementById(finalNotes[i].id);
-
-                    if (ball) {
-                        ball.setAttribute("color", "gold");
-                    }
-                }
-
-            }, melody.length * 600 + 500);
         }
-
+            
 
         // ----------------------------------------------------
         // ΣΥΝΑΡΤΗΣΗ ΠΟΥ ΚΑΛΕΙΤΑΙ ΟΤΑΝ ΠΑΤΑΜΕ ΜΙΑ ΜΠΑΛΑ
@@ -282,7 +222,7 @@
         Ο χρήστης βρίσκεται μέσα σε ένα εικονικό μουσείο όπου οι ήχοι έχουν χαθεί.
         Στόχος του είναι να επαναφέρει τη μουσική ισορροπία, βρίσκοντας επτά
         χρωματικές σφαίρες που αντιστοιχούν στις νότες Do, Re, Mi, Fa, Sol, La και Si.
-        Η εφαρμογή δεν επιτρέπει τυχαία επιλογή· ο χρήστης πρέπει να ακολουθήσει
+        Η εφαρμογή δεν επιτρέπει τυχαία επιλογή. Ο χρήστης πρέπει να ακολουθήσει
         τη σωστή μουσική σειρά. Κάθε σωστή επιλογή παίζει τη νότα και αφαιρεί τη
         σφαίρα από τη σκηνή. Όταν ολοκληρωθούν και οι επτά νότες, η πόρτα γίνεται
         πράσινη, εμφανίζεται μήνυμα επιτυχίας και ακούγεται μια τελική μελωδία.
