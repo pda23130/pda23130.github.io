@@ -55,60 +55,85 @@
 
         // 
         function playFinalMelody() {
-        
-            // Οι τελικές μπάλες που θα εμφανιστούν σε σειρά
+
+            // Δημιουργούμε ξανά τις 7 νότες σε σειρά στο τέλος
             const finalNotes = [
-                { id: "final1", freq: 262, color: "red",    x: -3 },
-                { id: "final2", freq: 294, color: "orange", x: -2 },
-                { id: "final3", freq: 330, color: "yellow", x: -1 },
-                { id: "final4", freq: 349, color: "green",  x: 0 },
-                { id: "final5", freq: 392, color: "cyan",   x: 1 },
-                { id: "final6", freq: 440, color: "blue",   x: 2 },
-                { id: "final7", freq: 494, color: "purple", x: 3 }
+                { id: "finalDo",  name: "Do",  freq: 262, color: "red",    x: -3 },
+                { id: "finalRe",  name: "Re",  freq: 294, color: "orange", x: -2 },
+                { id: "finalMi",  name: "Mi",  freq: 330, color: "yellow", x: -1 },
+                { id: "finalFa",  name: "Fa",  freq: 349, color: "green",  x: 0 },
+                { id: "finalSol", name: "Sol", freq: 392, color: "cyan",   x: 1 },
+                { id: "finalLa",  name: "La",  freq: 440, color: "blue",   x: 2 },
+                { id: "finalSi",  name: "Si",  freq: 494, color: "purple", x: 3 }
+            ];
+        
+            // Αυτή είναι η τελική μελωδία
+            const melody = [
+                "Do", "Mi", "Sol", "Si", "Sol", "La", "Si", "La", "Sol", "Mi", "Do"
             ];
         
             const scene = document.querySelector("a-scene");
         
-            // Πρώτα εμφανίζουμε ξανά τις 7 νότες σε ευθεία σειρά
+            // Εμφανίζουμε τις 7 μπάλες σε ευθεία σειρά
             for (let i = 0; i < finalNotes.length; i++) {
+        
                 const sphere = document.createElement("a-sphere");
         
                 sphere.setAttribute("id", finalNotes[i].id);
-                sphere.setAttribute("position", finalNotes[i].x + " 1.6 -4");
-                sphere.setAttribute("radius", "0.35");
+                sphere.setAttribute("position", finalNotes[i].x + " 2.3 -4");
+                sphere.setAttribute("radius", "0.45");
                 sphere.setAttribute("color", finalNotes[i].color);
         
                 scene.appendChild(sphere);
             }
         
-            // Μετά παίζει η μελωδία και κάθε μπάλα εξαφανίζεται με τη σειρά
-            for (let i = 0; i < finalNotes.length; i++) {
+            // Παίζει η μελωδία.
+            // Κάθε φορά φωτίζεται η αντίστοιχη μπάλα.
+            for (let i = 0; i < melody.length; i++) {
+        
                 setTimeout(function () {
         
-                    playNote(finalNotes[i].freq);
+                    // Βρίσκουμε ποια νότα πρέπει να παίξει τώρα
+                    const current = finalNotes.find(function(note) {
+                        return note.name === melody[i];
+                    });
         
+                    // Παίζει η νότα
+                    playNote(current.freq);
+        
+                    // Βρίσκουμε την αντίστοιχη μπάλα
+                    const ball = document.getElementById(current.id);
+        
+                    if (ball) {
+        
+                        // Μεγαλώνει η μπάλα
+                        ball.setAttribute("scale", "1.8 1.8 1.8");
+        
+                        // Γίνεται λευκή για να φαίνεται ότι παίζει
+                        ball.setAttribute("color", "white");
+        
+                        // Μετά από λίγο επανέρχεται
+                        setTimeout(function () {
+                            ball.setAttribute("scale", "1 1 1");
+                            ball.setAttribute("color", current.color);
+                        }, 400);
+                    }
+        
+                }, i * 600);
+            }
+        
+            // Στο τέλος όλες οι μπάλες γίνονται χρυσές
+            setTimeout(function () {
+        
+                for (let i = 0; i < finalNotes.length; i++) {
                     const ball = document.getElementById(finalNotes[i].id);
         
                     if (ball) {
-                        // Μεγαλώνει
-                        ball.setAttribute("scale", "1.8 1.8 1.8");
-                    
-                        // Γίνεται λευκή
-                        ball.setAttribute("color", "white");
-                    
-                        // Επιστρέφει μετά από λίγο
-                        setTimeout(function() {
-                    
-                            ball.setAttribute("scale", "1 1 1");
-                    
-                            ball.setAttribute(
-                                "color",
-                                finalNotes[i].color
-                            );
-                    
-                        }, 400);
+                        ball.setAttribute("color", "gold");
                     }
-            }
+                }
+        
+            }, melody.length * 600 + 500);
         }
 
         
