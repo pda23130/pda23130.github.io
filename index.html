@@ -25,7 +25,7 @@
             if (audioCtx === null) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
-
+          
             const oscillator = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
 
@@ -41,6 +41,18 @@
             oscillator.stop(audioCtx.currentTime + 0.6);
         }
 
+        // Παίζει όλες τις νότες στο τέλος, μία-μία, με όμορφο ρυθμό
+        function playFinalMelody() {
+            const melody = [262, 294, 330, 349, 392, 440, 494, 392, 494];
+        
+            for (let i = 0; i < melody.length; i++) {
+                setTimeout(function () {
+                    playNote(melody[i]);
+                }, i * 350);
+            }
+        }
+
+        
         // Συνάρτηση που καλείται όταν πατάμε μία μπάλα
         function collectNote(id, frequency, noteName) {
 
@@ -67,6 +79,8 @@
                     "value",
                     "Μπράβο! Η πόρτα άνοιξε!"
                 );
+            // Παίζει η τελική μελωδία
+            playFinalMelody();
             }
         }
     </script>
