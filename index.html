@@ -53,14 +53,47 @@
             oscillator.stop(audioCtx.currentTime + 0.6);
         }
 
-        // Παίζει όλες τις νότες στο τέλος, μία-μία, με όμορφο ρυθμό
+        // 
         function playFinalMelody() {
-            const melody = [262, 294, 330, 349, 392, 440, 494, 392, 494];
         
-            for (let i = 0; i < melody.length; i++) {
+            // Οι τελικές μπάλες που θα εμφανιστούν σε σειρά
+            const finalNotes = [
+                { id: "final1", freq: 262, color: "red",    x: -3 },
+                { id: "final2", freq: 294, color: "orange", x: -2 },
+                { id: "final3", freq: 330, color: "yellow", x: -1 },
+                { id: "final4", freq: 349, color: "green",  x: 0 },
+                { id: "final5", freq: 392, color: "cyan",   x: 1 },
+                { id: "final6", freq: 440, color: "blue",   x: 2 },
+                { id: "final7", freq: 494, color: "purple", x: 3 }
+            ];
+        
+            const scene = document.querySelector("a-scene");
+        
+            // Πρώτα εμφανίζουμε ξανά τις 7 νότες σε ευθεία σειρά
+            for (let i = 0; i < finalNotes.length; i++) {
+                const sphere = document.createElement("a-sphere");
+        
+                sphere.setAttribute("id", finalNotes[i].id);
+                sphere.setAttribute("position", finalNotes[i].x + " 1.6 -4");
+                sphere.setAttribute("radius", "0.35");
+                sphere.setAttribute("color", finalNotes[i].color);
+        
+                scene.appendChild(sphere);
+            }
+        
+            // Μετά παίζει η μελωδία και κάθε μπάλα εξαφανίζεται με τη σειρά
+            for (let i = 0; i < finalNotes.length; i++) {
                 setTimeout(function () {
-                    playNote(melody[i]);
-                }, i * 350);
+        
+                    playNote(finalNotes[i].freq);
+        
+                    const ball = document.getElementById(finalNotes[i].id);
+        
+                    if (ball) {
+                        ball.remove();
+                    }
+        
+                }, i * 500);
             }
         }
 
