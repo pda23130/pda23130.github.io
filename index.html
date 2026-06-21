@@ -56,6 +56,11 @@
         // Συνάρτηση που καλείται όταν πατάμε μία μπάλα
         function collectNote(id, frequency, noteName) {
 
+             // Αν η νότα έχει ήδη αφαιρεθεί, σταματάει η συνάρτηση
+            if (!document.getElementById(id)) {
+                return;
+            }
+            
             // Παίζει η νότα
             playNote(frequency);
 
@@ -68,8 +73,8 @@
                 "Βρήκες τη νότα " + noteName + " (" + notesFound + "/" + totalNotes + ")"
             );
 
-            // Κρύβεται η μπάλα
-            document.getElementById(id).setAttribute("visible", "false");
+            // Αφαιρείται τελείως η μπάλα από τη σκηνή
+            document.getElementById(id).remove();
 
             // Αν βρέθηκαν όλες οι νότες
             if (notesFound === totalNotes) {
