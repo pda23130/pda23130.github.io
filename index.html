@@ -90,10 +90,24 @@
                     const ball = document.getElementById(finalNotes[i].id);
         
                     if (ball) {
-                        ball.remove();
+                        // Μεγαλώνει
+                        ball.setAttribute("scale", "1.8 1.8 1.8");
+                    
+                        // Γίνεται λευκή
+                        ball.setAttribute("color", "white");
+                    
+                        // Επιστρέφει μετά από λίγο
+                        setTimeout(function() {
+                    
+                            ball.setAttribute("scale", "1 1 1");
+                    
+                            ball.setAttribute(
+                                "color",
+                                finalNotes[i].color
+                            );
+                    
+                        }, 400);
                     }
-        
-                }, i * 500);
             }
         }
 
