@@ -207,6 +207,29 @@
             // Αν η νότα είναι σωστή, ακούγεται
             playNote(frequency);
 
+            // Βρίσκουμε τη μπάλα που πατήθηκε
+            const ball = document.getElementById(id);
+            
+            // Μεγαλώνει
+            ball.setAttribute("scale", "1.8 1.8 1.8");
+            
+            // Γίνεται λευκή
+            ball.setAttribute("color", "white");
+            
+            // Μετά από λίγο εξαφανίζεται
+            setTimeout(function() {
+            
+                ball.setAttribute("scale", "0.3 0.3 0.3");
+            
+            }, 300);
+            
+            
+            setTimeout(function() {
+            
+                ball.remove();
+            
+            }, 600);
+            
             // Αυξάνουμε τον μετρητή
             notesFound++;
 
@@ -308,26 +331,61 @@
             </a-text>
 
             <!-- Οι 7 αρχικές μπάλες / νότες -->
-            <a-sphere id="note1" position="-3 1 -3" radius="0.4" color="red"
-                onclick="collectNote('note1', 262, 'Do')"></a-sphere>
-
-            <a-sphere id="note2" position="-2 1 -5" radius="0.4" color="orange"
-                onclick="collectNote('note2', 294, 'Re')"></a-sphere>
-
-            <a-sphere id="note3" position="-1 1 -3" radius="0.4" color="yellow"
-                onclick="collectNote('note3', 330, 'Mi')"></a-sphere>
-
-            <a-sphere id="note4" position="0 1 -5" radius="0.4" color="green"
-                onclick="collectNote('note4', 349, 'Fa')"></a-sphere>
-
-            <a-sphere id="note5" position="1 1 -3" radius="0.4" color="cyan"
-                onclick="collectNote('note5', 392, 'Sol')"></a-sphere>
-
-            <a-sphere id="note6" position="2 1 -5" radius="0.4" color="blue"
-                onclick="collectNote('note6', 440, 'La')"></a-sphere>
-
-            <a-sphere id="note7" position="3 1 -3" radius="0.4" color="purple"
-                onclick="collectNote('note7', 494, 'Si')"></a-sphere>
+            <!-- Do -->
+            <a-sphere id="note1"
+                      position="-5 1 -2"
+                      radius="0.4"
+                      color="red"
+                      onclick="collectNote('note1',262,'Do')">
+            </a-sphere>
+            
+            <!-- Re -->
+            <a-sphere id="note2"
+                      position="4 1.8 -5"
+                      radius="0.4"
+                      color="orange"
+                      onclick="collectNote('note2',294,'Re')">
+            </a-sphere>
+            
+            <!-- Mi -->
+            <a-sphere id="note3"
+                      position="-2 1.3 -6"
+                      radius="0.4"
+                      color="yellow"
+                      onclick="collectNote('note3',330,'Mi')">
+            </a-sphere>
+            
+            <!-- Fa -->
+            <a-sphere id="note4"
+                      position="5 2 -1"
+                      radius="0.4"
+                      color="green"
+                      onclick="collectNote('note4',349,'Fa')">
+            </a-sphere>
+            
+            <!-- Sol -->
+            <a-sphere id="note5"
+                      position="-4 0.8 -5"
+                      radius="0.4"
+                      color="cyan"
+                      onclick="collectNote('note5',392,'Sol')">
+            </a-sphere>
+            
+            <!-- La -->
+            <a-sphere id="note6"
+                      position="1 1.5 -2"
+                      radius="0.4"
+                      color="blue"
+                      onclick="collectNote('note6',440,'La')">
+            </a-sphere>
+            
+            <!-- Si -->
+            <a-sphere id="note7"
+                      position="3 2.2 -7"
+                      radius="0.4"
+                      color="purple"
+                      onclick="collectNote('note7',494,'Si')">
+            </a-sphere>
 
             <!-- Φωτισμός -->
             <a-light type="ambient" intensity="0.6"></a-light>
