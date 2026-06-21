@@ -62,10 +62,13 @@
             notesFound = notesFound + 1;
 
             // Αλλάζει το μήνυμα
-            document.getElementById("message").setAttribute(
-                "value",
-                "Βρήκες τη νότα " + noteName + " (" + notesFound + "/" + totalNotes + ")"
-            );
+            //document.getElementById("message").setAttribute(
+           //     "value",
+            //    "Βρήκες τη νότα " + noteName + " (" + notesFound + "/" + totalNotes + ")"
+           // );
+
+            document.getElementById("score").innerHTML =
+            "Note found (" + notesFound + "/" + totalNotes + ")";
 
             // Κρύβεται η μπάλα
             document.getElementById(id).setAttribute("visible", "false");
@@ -73,11 +76,14 @@
             // Αν βρέθηκαν όλες οι νότες
             if (notesFound === totalNotes) {
                 document.getElementById("door").setAttribute("color", "green");
-
-                document.getElementById("message").setAttribute(
-                    "value",
-                    "BRAVO! THE DOOR IS OPEN!"
-                );
+            
+                document.getElementById("score").innerHTML =
+                    "Well done! The door is open!";
+            
+                // Παίζει η τελική μελωδία
+                playFinalMelody();
+            }
+                
                 
             // Παίζει η τελική μελωδία
             playFinalMelody();
@@ -103,6 +109,10 @@
     </p>
     
     <hr />
+
+    <p id="score" style="text-align:center; font-size:22px; color:darkred;">
+        Find the 7 lost notes
+    </p>
 
     <div align="center">
 
