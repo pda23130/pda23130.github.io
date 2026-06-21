@@ -1,38 +1,166 @@
-<script>
-    let notesFound = 0;
-    const totalNotes = 7;
+<html>
 
-    // Δημιουργούμε ένα audio context ΜΙΑ φορά
-    let audioCtx;
+<head>
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
 
-    function playNote(frequency) {
+    <style>
+        h1 { text-align: center; }
+        h3 { text-align: center; }
+        a-scene { width: 80%; height: 500px; border: dotted silver 1px; }
+        body { font-family: Arial; }
+    </style>
 
-        // Αν δεν υπάρχει audio context, το φτιάχνουμε
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    <script>
+        // Μετρητής για τις νότες που βρήκε ο παίκτης
+        let notesFound = 0;
+
+        // Σύνολο νοτών
+        const totalNotes = 7;
+
+        // Δημιουργούμε ένα audio context
+        let audioCtx = null;
+
+        // Συνάρτηση που παίζει μία νότα
+        function playNote(frequency) {
+            if (audioCtx === null) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            const oscillator = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            oscillator.frequency.value = frequency;
+            oscillator.type = "sine";
+
+            oscillator.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            gain.gain.value = 0.3;
+
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.6);
         }
 
-        // Αν ο browser το έχει σταματήσει, το ξυπνάμε
-        if (audioCtx.state === "suspended") {
-            audioCtx.resume();
+        // Συνάρτηση που καλείται όταν πατάμε μία μπάλα
+        function collectNote(id, frequency, noteName) {
+
+            // Παίζει η νότα
+            playNote(frequency);
+
+            // Αυξάνεται ο μετρητής
+            notesFound = notesFound + 1;
+
+            // Αλλάζει το μήνυμα
+            document.getElementById("message").setAttribute(
+                "value",
+                "Βρήκες τη νότα " + noteName + " (" + notesFound + "/" + totalNotes + ")"
+            );
+
+            // Κρύβεται η μπάλα
+            document.getElementById(id).setAttribute("visible", "false");
+
+            // Αν βρέθηκαν όλες οι νότες
+            if (notesFound === totalNotes) {
+                document.getElementById("door").setAttribute("color", "green");
+
+                document.getElementById("message").setAttribute(
+                    "value",
+                    "Μπράβο! Η πόρτα άνοιξε!"
+                );
+            }
         }
+    </script>
+</head>
 
-        // Δημιουργούμε τον ήχο
-        const oscillator = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+<body>
 
-        oscillator.frequency.value = frequency;
-        oscillator.type = "sine";
+    <h1>Escape from the Museum of Lost Sounds</h1>
+    <h3>Γεώργιος Παπαδημητρίου</h3>
 
-        oscillator.connect(gain);
-        gain.connect(audioCtx.destination);
+    <hr />
 
-        // Ένταση
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    <p>
+        <strong>Σενάριο (script):</strong>
+        Ο χρήστης βρίσκεται σε ένα εικονικό μουσείο όπου οι ήχοι έχουν χαθεί.
+        Πρέπει να βρει επτά χρωματικές σφαίρες. Κάθε σφαίρα παίζει μία νότα.
+        Όταν βρεθούν όλες οι νότες, η πόρτα ανοίγει.
+    </p>
 
-        // Σβήσιμο ήχου για να μη χτυπάει απότομα
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.7);
+    <hr />
 
-        oscillator.start(audioCtx.currentTime);
-        oscillator.stop(audioCtx.currentTime + 0.7);
-    }
+    <div align="center">
+
+        <a-scene ondblclick="this.requestFullscreen();" embedded cursor="rayOrigin: mouse">
+
+            <a-sky color="#111122"></a-sky>
+
+            <a-plane position="0 0 0" rotation="-90 0 0"
+                     width="14" height="14" color="#333333">
+            </a-plane>
+
+            <a-box position="0 2 -7" width="14" height="4" depth="0.2" color="#555555"></a-box>
+            <a-box position="-7 2 0" width="0.2" height="4" depth="14" color="#444444"></a-box>
+            <a-box position="7 2 0" width="0.2" height="4" depth="14" color="#444444"></a-box>
+
+            <a-box id="door" position="0 1 -6.8"
+                   width="2.5" height="2.5" depth="0.3" color="darkred">
+            </a-box>
+
+            <a-text id="message"
+                    value="Βρες τις 7 χαμένες νότες"
+                    position="-3 3 -5"
+                    color="white"
+                    width="7">
+            </a-text>
+
+            <!-- Οι 7 μπάλες / νότες -->
+            <a-sphere id="note1" position="-3 1 -3" radius="0.4" color="red"
+                onclick="collectNote('note1', 262, 'Ντο')"></a-sphere>
+
+            <a-sphere id="note2" position="-2 1 -5" radius="0.4" color="orange"
+                onclick="collectNote('note2', 294, 'Ρε')"></a-sphere>
+
+            <a-sphere id="note3" position="-1 1 -3" radius="0.4" color="yellow"
+                onclick="collectNote('note3', 330, 'Μι')"></a-sphere>
+
+            <a-sphere id="note4" position="0 1 -5" radius="0.4" color="green"
+                onclick="collectNote('note4', 349, 'Φα')"></a-sphere>
+
+            <a-sphere id="note5" position="1 1 -3" radius="0.4" color="cyan"
+                onclick="collectNote('note5', 392, 'Σολ')"></a-sphere>
+
+            <a-sphere id="note6" position="2 1 -5" radius="0.4" color="blue"
+                onclick="collectNote('note6', 440, 'Λα')"></a-sphere>
+
+            <a-sphere id="note7" position="3 1 -3" radius="0.4" color="purple"
+                onclick="collectNote('note7', 494, 'Σι')"></a-sphere>
+
+            <a-light type="ambient" intensity="0.6"></a-light>
+            <a-light type="point" position="0 5 0" intensity="1"></a-light>
+
+            <a-camera position="0 1.6 4">
+                <a-cursor color="white"></a-cursor>
+            </a-camera>
+
+        </a-scene>
+
+    </div>
+
+    <hr />
+
+    <p>
+        <strong>Οδηγίες (guidelines):</strong>
+        Κάνε κλικ πάνω στις χρωματικές σφαίρες. Κάθε σφαίρα παίζει μία νότα και εξαφανίζεται.
+        Όταν βρεθούν και οι επτά νότες, η πόρτα γίνεται πράσινη.
+    </p>
+
+    <hr />
+
+    <p>
+        <strong>Credits:</strong>
+        Δημιουργία με A-Frame 1.7.0 και Web Audio API.
+    </p>
+
+</body>
+
+</html>
