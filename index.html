@@ -173,7 +173,7 @@
         // ΣΥΝΑΡΤΗΣΗ ΠΟΥ ΚΑΛΕΙΤΑΙ ΟΤΑΝ ΠΑΤΑΜΕ ΜΙΑ ΜΠΑΛΑ
         // ----------------------------------------------------
 
-        function collectNote(id, frequency, noteName) {
+        function collectNote(id, frequency, noteName, noteColor) {
 
             // Αν η μπάλα έχει ήδη αφαιρεθεί, δεν γίνεται τίποτα
             if (!document.getElementById(id)) {
@@ -193,6 +193,19 @@
 
             // Αν η νότα είναι σωστή, ακούγεται
             playNote(frequency);
+
+            // Ο ουρανός παίρνει το χρώμα της σωστής νότας
+            document.getElementById("sky").setAttribute(
+                "color",
+                noteColor
+            );
+
+            setTimeout(function() {
+            document.getElementById("sky").setAttribute(
+                "color",
+                "#111122"
+            );
+        }, 800);
 
             // Βρίσκουμε τη μπάλα που πατήθηκε
             const ball = document.getElementById(id);
@@ -292,7 +305,7 @@
         <a-scene ondblclick="this.requestFullscreen();" embedded cursor="rayOrigin: mouse">
 
             <!-- Φόντο του κόσμου -->
-            <a-sky color="#111122"></a-sky>
+            <a-sky id="sky" color="#111122"></a-sky>
 
             <!-- Πάτωμα -->
             <a-plane position="0 0 0"
@@ -325,11 +338,7 @@
                     width="15">
             </a-text>
 
-            // ----------------------------------------------------
-            // ΧΡΟΝΟΜΕΤΡΟ ΑΝΤΙΣΤΡΟΦΗΣ ΜΕΤΡΗΣΗΣ
-            // Ο χρήστης πρέπει να ολοκληρώσει την αποστολή
-            // πριν λήξει ο διαθέσιμος χρόνος.
-            // ----------------------------------------------------
+            <!-- Χρονόμετρο αντίστροφης μέτρησης μέσα στη σκηνή -->
             <a-text id="timer"
                     value="Time: 60"
                     position="0 2.4 -4"
@@ -344,7 +353,7 @@
                       position="-5 1 -2"
                       radius="0.5"
                       color="red"
-                      onclick="collectNote('note1',262,'Do')">
+                      onclick="collectNote('note1',262,'Do','red')">
             </a-sphere>
             
             <!-- Re -->
@@ -352,7 +361,7 @@
                       position="4 1.8 -5"
                       radius="0.5"
                       color="orange"
-                      onclick="collectNote('note2',294,'Re')">
+                      onclick="collectNote('note2',294,'Re','orange')">
             </a-sphere>
             
             <!-- Mi -->
@@ -360,7 +369,7 @@
                       position="-2 1.3 -6"
                       radius="0.5"
                       color="yellow"
-                      onclick="collectNote('note3',330,'Mi')">
+                      onclick="collectNote('note3',330,'Mi','yellow')">
             </a-sphere>
             
             <!-- Fa -->
@@ -368,7 +377,7 @@
                       position="5 2 -1"
                       radius="0.5"
                       color="green"
-                      onclick="collectNote('note4',349,'Fa')">
+                      onclick="collectNote('note4',349,'Fa','green')">
             </a-sphere>
             
             <!-- Sol -->
@@ -376,7 +385,7 @@
                       position="-4 0.8 -5"
                       radius="0.5"
                       color="cyan"
-                      onclick="collectNote('note5',392,'Sol')">
+                      onclick="collectNote('note5',392,'Sol','cyan')">
             </a-sphere>
             
             <!-- La -->
@@ -384,7 +393,7 @@
                       position="1 1.5 -2"
                       radius="0.5"
                       color="blue"
-                      onclick="collectNote('note6',440,'La')">
+                      onclick="collectNote('note6',440,'La','blue')">
             </a-sphere>
             
             <!-- Si -->
@@ -392,7 +401,7 @@
                       position="3 2.2 -7"
                       radius="0.5"
                       color="purple"
-                      onclick="collectNote('note7',494,'Si')">
+                      onclick="collectNote('note7',494,'Si','purple')">
             </a-sphere>
 
             <!-- Φωτισμός -->
