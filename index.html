@@ -44,6 +44,12 @@
         // Δείχνει ποια νότα ζητάμε κάθε φορά
         let currentNote = 0;
 
+        // Χρόνος σε δευτερόλεπτα
+        let timeLeft = 60;
+
+        // Αναφορά στο χρονόμετρο
+        let timer;       
+
         // Το audio context χρησιμοποιείται για να παραχθεί ήχος
         let audioCtx = null;
 
@@ -83,6 +89,38 @@
 
             // Σταματά μετά από 0.6 δευτερόλεπτα
             oscillator.stop(audioCtx.currentTime + 0.6);
+        }
+
+        // ----------------------------------------------------
+        // ΕΝΑΡΞΗ ΧΡΟΝΟΜΕΤΡΟΥ
+        // Μειώνει τον χρόνο κατά 1 δευτερόλεπτο.
+        // Όταν ο χρόνος μηδενιστεί εμφανίζεται GAME OVER.
+        // ----------------------------------------------------
+        
+        function startTimer() {
+
+            timer = setInterval(function() {
+        
+                timeLeft--;
+        
+                document.getElementById("timer").setAttribute(
+                    "value",
+                    "Time: " + timeLeft
+                );
+        
+                // Αν τελειώσει ο χρόνος
+                if (timeLeft <= 0) {
+        
+                    clearInterval(timer);
+        
+                    document.getElementById("message").setAttribute(
+                        "value",
+                        "GAME OVER"
+                    );
+        
+                }
+        
+            }, 1000);
         }
 
 
@@ -199,6 +237,8 @@
             // Αν βρέθηκαν όλες οι νότες, ολοκληρώνεται το παιχνίδι
             if (notesFound === totalNotes) {
 
+                clearInterval(timer);
+                
                 // Η πόρτα γίνεται πράσινη
                 document.getElementById("door").setAttribute(
                     "color",
@@ -215,6 +255,15 @@
                 playFinalMelody();
             }
         }
+
+        // ----------------------------------------------------
+        // ΕΝΑΡΞΗ ΧΡΟΝΟΜΕΤΡΟΥ ΜΕ ΤΗ ΦΟΡΤΩΣΗ ΤΗΣ ΣΕΛΙΔΑΣ
+        // ----------------------------------------------------
+        
+        window.onload = function() {
+            startTimer();
+        }
+        
     </script>
 </head>
 
@@ -274,6 +323,19 @@
                     align="center"
                     color="yellow"
                     width="15">
+            </a-text>
+
+            // ----------------------------------------------------
+            // ΧΡΟΝΟΜΕΤΡΟ ΑΝΤΙΣΤΡΟΦΗΣ ΜΕΤΡΗΣΗΣ
+            // Ο χρήστης πρέπει να ολοκληρώσει την αποστολή
+            // πριν λήξει ο διαθέσιμος χρόνος.
+            // ----------------------------------------------------
+            <a-text id="timer"
+                    value="Time: 60"
+                    position="0 2.4 -4"
+                    align="center"
+                    color="red"
+                    width="10">
             </a-text>
 
             <!-- Οι 7 αρχικές μπάλες / νότες -->
