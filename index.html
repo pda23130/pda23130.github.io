@@ -259,11 +259,26 @@
                 );
 
                 // Εμφανίζεται μήνυμα επιτυχίας
+               // document.getElementById("message").setAttribute(
+                //    "value",
+                //    "CONGRATULATIONS!"
+               // );
+                
                 document.getElementById("message").setAttribute(
                     "value",
                     "CONGRATULATIONS!"
                 );
-
+                
+                document.getElementById("message").setAttribute(
+                    "color",
+                    "gold"
+                );
+                
+                document.getElementById("message").setAttribute(
+                    "width",
+                    "12"
+                );
+                
                 // Παίζει η τελική μελωδία
                 playFinalMelody();
             }
@@ -329,19 +344,19 @@
                    color="darkred">
             </a-box>
 
-            <!-- Μήνυμα μέσα στη σκηνή -->
+            <!-- Μήνυμα παιχνιδιού στον πίσω τοίχο -->
             <a-text id="message"
                     value="Find Note: Do"
-                    position="0 3 -4"
+                    position="0 3.2 -6.85"
                     align="center"
                     color="yellow"
                     width="15">
             </a-text>
 
-            <!-- Χρονόμετρο αντίστροφης μέτρησης μέσα στη σκηνή -->
+            <!-- Χρονόμετρο στον πίσω τοίχο -->
             <a-text id="timer"
                     value="Time: 60"
-                    position="0 2.4 -4"
+                    position="0 2.4 -6.85"
                     align="center"
                     color="red"
                     width="10">
